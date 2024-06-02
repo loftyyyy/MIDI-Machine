@@ -12,7 +12,6 @@ public class Shape extends JPanel {
 
 
     public void paintComponent(Graphics g){
-        System.out.println("hell");
         g.setColor(color);
         g.fillRect(3,3,40,40);
 

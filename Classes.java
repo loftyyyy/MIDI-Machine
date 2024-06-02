@@ -18,7 +18,6 @@ public class Classes {
 //        classes.createInnerClassObject();
         innerClass.setX();
         System.out.println(x);
-
     }
 
 }

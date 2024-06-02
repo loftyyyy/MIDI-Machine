@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-public class FrontEnd implements ActionListener{
+public class FrontEnd {
 
     protected JFrame frame;
     protected JButton button;
@@ -31,8 +31,8 @@ public class FrontEnd implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         eastButton.setActionCommand("eastButton");
         button = new JButton("Hello");
-        button.addActionListener( this);
-        eastButton.addActionListener(e -> westLabel.setText("Hello world"));
+        button.addActionListener( new ColorListener());
+        eastButton.addActionListener(new LabelListener());
 
         frame.getContentPane().add(BorderLayout.SOUTH,button);
         frame.getContentPane().add(BorderLayout.CENTER, shape);
@@ -43,17 +43,25 @@ public class FrontEnd implements ActionListener{
 
     }
 
-    public void actionPerformed(ActionEvent e){
-//        button.setText("bitch");
-//        if(e.getActionCommand().equals("eastButton")){
-//            westLabel.setText("Hello");
-//        }
+    public class LabelListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton sourceButton = (JButton) e.getSource();
+            eastButton.setText("I've been edited");
 
-        shape.color = Color.pink;
-        frame.repaint();
-
-
-
+        }
     }
+
+    public class ColorListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            JButton sourceButton = (JButton) e.getSource();
+            currentColor = (currentColor == Color.BLUE) ? Color.RED : Color.BLUE;
+            shape.color = currentColor;
+
+
+        }
+    }
+
 }
 
