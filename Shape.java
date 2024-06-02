@@ -3,12 +3,13 @@ import java.awt.*;
 import java.lang.reflect.Field;
 
 public class Shape extends JPanel {
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     Color color;
 
-    public Shape(Color color){
-        this.color = color;
 
-    }
 
 
     public void paintComponent(Graphics g){

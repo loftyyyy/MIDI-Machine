@@ -23,7 +23,8 @@ public class FrontEnd {
 
     }
     public void window(){
-        shape = new Shape(currentColor);
+        shape = new Shape();
+        shape.setColor(currentColor);
 
         frame = new JFrame();
         westLabel = new Label("West Label");
@@ -57,9 +58,8 @@ public class FrontEnd {
         public void actionPerformed(ActionEvent e){
             JButton sourceButton = (JButton) e.getSource();
             currentColor = (currentColor == Color.BLUE) ? Color.RED : Color.BLUE;
-            shape.color = currentColor;
-
-
+            shape.setColor(currentColor);
+            frame.repaint();
         }
     }
 
