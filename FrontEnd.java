@@ -12,6 +12,8 @@ public class FrontEnd implements ActionListener{
     protected Graphics graphics;
     protected Label westLabel;
     protected JButton eastButton;
+    protected Color currentColor = Color.green;
+    protected Shape shape;
 
 
     public static void main(String[] args){
@@ -21,7 +23,7 @@ public class FrontEnd implements ActionListener{
 
     }
     public void window(){
-        Shape shape = new Shape(70,70,100,100);
+        shape = new Shape(currentColor);
 
         frame = new JFrame();
         westLabel = new Label("West Label");
@@ -39,10 +41,6 @@ public class FrontEnd implements ActionListener{
         frame.setSize(300,300);
         frame.setVisible(true);
 
-
-
-
-
     }
 
     public void actionPerformed(ActionEvent e){
@@ -50,8 +48,10 @@ public class FrontEnd implements ActionListener{
 //        if(e.getActionCommand().equals("eastButton")){
 //            westLabel.setText("Hello");
 //        }
-        System.out.println("hi");
+
+        shape.color = Color.pink;
         frame.repaint();
+
 
 
     }

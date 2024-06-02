@@ -3,23 +3,18 @@ import java.awt.*;
 import java.lang.reflect.Field;
 
 public class Shape extends JPanel {
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
+    Color color;
 
-
-    public Shape(int x, int y, int width, int height){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    public Shape(Color color){
+        this.color = color;
 
     }
 
+
     public void paintComponent(Graphics g){
-            g.setColor(Color.green);
-            g.fillRect(x,y,width,height);
+        System.out.println("hell");
+        g.setColor(color);
+        g.fillRect(3,3,40,40);
 
     }
 
