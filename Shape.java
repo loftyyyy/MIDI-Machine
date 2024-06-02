@@ -8,13 +8,20 @@ public class Shape extends JPanel {
     }
 
     Color color;
+    int x;
+    int y;
 
+    public void setX(int x) {
+        this.x = x;
+    }
 
-
+    public void setY(int y) {
+        this.y = y;
+    }
 
     public void paintComponent(Graphics g){
         g.setColor(color);
-        g.fillRect(3,3,40,40);
+        g.fillRect(x,y,40,40);
 
     }
 
