@@ -2,7 +2,7 @@ import javax.sound.midi.*;
 
 import static javax.sound.midi.ShortMessage.*;
 
-public class SequencerClass {
+public class SequencerClass implements ControllerEventListener {
     public static void main(String[] args){
         SequencerClass obj = new SequencerClass();
         obj.play();
@@ -46,4 +46,8 @@ public class SequencerClass {
     }
 
 
+    @Override
+    public void controlChange(ShortMessage event) {
+        System.out.println("Hi");
+    }
 }
