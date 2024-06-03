@@ -1,39 +1,47 @@
 import javax.sound.midi.*;
+import javax.swing.*;
 
 import static javax.sound.midi.ShortMessage.*;
 
-public class SequencerClass implements ControllerEventListener {
+public class SequencerClass {
+    protected Shape shape;
     public static void main(String[] args){
         SequencerClass obj = new SequencerClass();
         obj.play();
     }
+    public void setGUI(){
+        JFrame frame = new JFrame("Music Beat Generator");
+        shape = new Shape();
+        frame.setContentPane(shape);
+        frame.setBounds(30,30,300,300);
+        frame.setVisible(true);
+
+
+    }
 
     public void play(){
+        setGUI();
+
         try{
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
             System.out.println("Scuess");
 
+            int[] eventsIWant = {127};
+            sequencer.addControllerEventListener(shape, eventsIWant);
+
             Sequence seq = new Sequence(Sequence.PPQ, 4);
             Track track = seq.createTrack();
 
-            ShortMessage firstMessage = new ShortMessage();
-            firstMessage.setMessage(PROGRAM_CHANGE, 1, 44, 100);
-            MidiEvent changeInstrument = new MidiEvent(firstMessage, 1);
-            track.add(changeInstrument);
-
-            ShortMessage piano44 = new ShortMessage();
-            piano44.setMessage(NOTE_ON, 1,44,100);
-            MidiEvent piano444 = new MidiEvent(piano44,1);
-            track.add(piano444);
-
-            ShortMessage piano66 = new ShortMessage();
-            piano44.setMessage(NOTE_OFF, 1,44,100);
-            MidiEvent piano666 = new MidiEvent(piano66,1);
-            track.add(piano666);
+            for(int i = 5; i < 100; i += 1){
+                track.add(makeEvent(NOTE_ON, 1, i, 100, i));
+                track.add(makeEvent(CONTROL_CHANGE, 1, 127,0, i));
+                track.add(makeEvent(NOTE_OFF,1, i, 100, i + 2));
+            }
 
             sequencer.setSequence(seq);
             sequencer.start();
+            sequencer.setTempoInBPM(120);
 
 
 
@@ -45,9 +53,21 @@ public class SequencerClass implements ControllerEventListener {
         }
     }
 
+    public static MidiEvent makeEvent(int command, int channel, int data1, int data2, int tick){
+        MidiEvent event = null;
 
-    @Override
-    public void controlChange(ShortMessage event) {
-        System.out.println("Hi");
+        try{
+
+            ShortMessage msg = new ShortMessage();
+            msg.setMessage(command, channel, data1, data2);
+            event = new MidiEvent(msg, tick);
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return event;
     }
+
+
 }
