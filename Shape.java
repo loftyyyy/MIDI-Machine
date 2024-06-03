@@ -42,6 +42,7 @@ public class Shape extends JPanel implements ControllerEventListener {
     @Override
     public void controlChange(ShortMessage event) {
         msg = true;
+
         repaint();
 
 
