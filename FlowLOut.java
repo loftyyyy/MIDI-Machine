@@ -18,17 +18,29 @@ public class FlowLOut {
         JFrame window = new JFrame();
         JPanel panel = new JPanel();
         JPanel panelBox = new JPanel();
+        String[] stringList = {"Hi", "Hello", "I "};
+        JList<String> stringJList = new JList<>(stringList);
+        JScrollPane jScrollPane2 = new JScrollPane(stringJList);
+        jScrollPane2.createVerticalScrollBar();
+        stringJList.setVisibleRowCount(1);
+        stringJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        window.add(jScrollPane2);
 
 
+        window.add(BorderLayout.CENTER, stringJList);
 
 
         panelBox.setLayout(new BoxLayout(panelBox, BoxLayout.Y_AXIS));
 
         JTextArea textArea = new JTextArea(10,20);
         JScrollPane jScrollPane = new JScrollPane(textArea);
+        JButton button  = new JButton("SEND");
+        button.addActionListener(event -> textArea.append(textArea.getText()));
+
         textArea.setLineWrap(true);
         jScrollPane.createVerticalScrollBar();
         panelBox.add(jScrollPane);
+        panelBox.add(button);
         window.getContentPane().add(BorderLayout.WEST, panelBox);
 
         panel.setBackground(Color.GRAY);
@@ -40,6 +52,8 @@ public class FlowLOut {
         panel.add(nameField);
         panel.add(sendButton);
         window.getContentPane().add(BorderLayout.EAST, panel);
+
+
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
