@@ -1,10 +1,9 @@
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.Track;
+import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static javax.sound.midi.ShortMessage.*;
 
 public class MIDIFrontEnd {
     private ArrayList<JCheckBox> checkBoxes;
@@ -32,16 +31,19 @@ public class MIDIFrontEnd {
         JButton stopButton = new JButton("Stop");
         JButton tempoUpButton = new JButton("Tempo Up");
         JButton tempoDownButton = new JButton("Tempo Down");
+        JButton clearButton = new JButton("Clear Track");
 
-        startButton.addActionListener(event -> MakeTrack());
+        startButton.addActionListener(event -> buildTrackAndStart());
         stopButton.addActionListener(event -> sequencer.stop());
         tempoUpButton.addActionListener(event -> changeTempo(1.03f));
         tempoDownButton.addActionListener(event -> changeTempo(0.97f));
+        clearButton.addActionListener(event -> clearTrack());
 
         buttonBox.add(startButton);
         buttonBox.add(stopButton);
         buttonBox.add(tempoUpButton);
         buttonBox.add(tempoDownButton);
+        buttonBox.add(clearButton);
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
 
@@ -92,9 +94,48 @@ public class MIDIFrontEnd {
             trackList = new int[16];
             int key = instruments[i];
 
+            for(int j = 0; j < 16; j++){
+                JCheckBox jc = checkBoxes.get(j + 16 * i);
+                if(jc.isSelected()){
+                    trackList[j] = key;
+                }else{
+                    trackList[j] = 0;
+                }
+            }
+
+
+            makeTrack(trackList);
+            track.add(makeEvent(CONTROL_CHANGE, 1,127,0,16));
+
 
         }
+        track.add(makeEvent(PROGRAM_CHANGE,9,1,0,15));
 
+        try{
+            sequencer.setSequence(sequence);
+            sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
+            sequencer.setTempoInBPM(120);
+            sequencer.start();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public static MidiEvent makeEvent(int command, int channel, int data1, int data2, int tick){
+        MidiEvent event = null;
+
+        try{
+
+            ShortMessage msg = new ShortMessage();
+            msg.setMessage(command, channel, data1, data2);
+            event = new MidiEvent(msg, tick);
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return event;
     }
     private void changeTempo(float tempoMultiplier){
         float tempoFactor = sequencer.getTempoFactor();
@@ -116,8 +157,20 @@ public class MIDIFrontEnd {
         }
     }
 
-    public void MakeTrack(){
+    public void makeTrack(int[] list){
+        for(int i = 0; i < 16; i++){
+            int key= list[i];
 
+            if(key != 0){
+                track.add(makeEvent(NOTE_ON, 9, key, 100, i));
+                track.add(makeEvent(NOTE_OFF, 9, key, 100, i + 1));
+            }
+        }
+    }
 
+    public void clearTrack(){
+        for(int i = 0; i < checkBoxes.size(); i++){
+            checkBoxes.get(i).setSelected(false);
+        }
     }
 }
