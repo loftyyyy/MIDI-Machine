@@ -155,6 +155,7 @@ public class MusicGenerator {
 
     }
 
+
     public void clearTrack(){
         for(JCheckBox checkBox: checkBoxes){
             checkBox.setSelected(false);
