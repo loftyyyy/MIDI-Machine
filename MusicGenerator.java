@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import static javax.sound.midi.ShortMessage.*;
 
 public class MusicGenerator implements Serializable {
+    private JFrame window = new JFrame("Music Generator");
     private Sequencer sequencer;
     private Track track;
     private Sequence sequence;
@@ -23,7 +24,6 @@ public class MusicGenerator implements Serializable {
     }
 
     public void makeGUI(){
-        JFrame window = new JFrame("Music Generator");
         BorderLayout borderLayout = new BorderLayout();
         JPanel backgroundPanel = new JPanel(borderLayout);
         backgroundPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -157,13 +157,27 @@ public class MusicGenerator implements Serializable {
             FileInputStream fileInputStream = new FileInputStream("TrackSaveState.ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            MusicGenerator savedState = (MusicGenerator) objectInputStream.readObject();
-            savedState.makeGUI();
+            MusicGenerator generator = (MusicGenerator) objectInputStream.readObject();
+
+            ArrayList<JCheckBox> savedCheckboxes = (ArrayList<JCheckBox>) objectInputStream.readObject();
+
+            for(int i = 0; i < checkBoxes.size(); i++){
+                checkBoxes.get(i).setSelected(savedCheckboxes.get(i).isSelected());
+            }
+
+
+
+            objectInputStream.close();
+            window.repaint();
+            window.revalidate();
+            System.out.println("Hello world");
+
 
 
 
         }catch(Exception e){
 
+            e.printStackTrace();
         }
     }
     public void makeTrack(int[] list){
