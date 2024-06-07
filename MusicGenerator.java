@@ -1,11 +1,13 @@
 import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
 
-public class MusicGenerator {
+public class MusicGenerator implements Serializable {
     private Sequencer sequencer;
     private Track track;
     private Sequence sequence;
@@ -16,6 +18,7 @@ public class MusicGenerator {
     public static void main(String[] args){
         MusicGenerator musicGenerator = new MusicGenerator();
         musicGenerator.makeGUI();
+        System.out.println("Successfully Called Main Method");
 
     }
 
@@ -33,12 +36,16 @@ public class MusicGenerator {
         JButton tempoUp = new JButton("Tempo Up");
         JButton tempoDown = new JButton("Tempo Down");
         JButton clearTrack = new JButton("Clear Track");
+        JButton saveTrack = new JButton("Save Track");
+        JButton loadTrack = new JButton("Load Track");
 
         buttonsBox.add(start);
         buttonsBox.add(stop);
         buttonsBox.add(tempoUp);
         buttonsBox.add(tempoDown);
         buttonsBox.add(clearTrack);
+        buttonsBox.add(saveTrack);
+        buttonsBox.add(loadTrack);
 
 
         start.addActionListener(event -> buildAndStartTrack());
@@ -46,6 +53,8 @@ public class MusicGenerator {
         tempoUp.addActionListener(event -> changeTempo(1.09f));
         tempoDown.addActionListener(event -> changeTempo(0.97f));
         clearTrack.addActionListener(event -> clearTrack());
+        saveTrack.addActionListener(event -> saveTrack());
+        loadTrack.addActionListener(event -> loadTrack());
 
         Box instrumentLabel = new Box(BoxLayout.Y_AXIS);
         for(String instrumentName: instrumentNames){
@@ -125,6 +134,37 @@ public class MusicGenerator {
         }
 
 
+    }
+
+    public void saveTrack(){
+
+        try{
+            MusicGenerator musicGenerator = new MusicGenerator();
+            FileOutputStream file = new FileOutputStream("TrackSaveState.ser");
+            ObjectOutputStream os = new ObjectOutputStream(file);
+            os.writeObject(musicGenerator);
+            os.close();
+
+            System.out.print("Saved Successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public void loadTrack(){
+
+        try{
+            FileInputStream fileInputStream = new FileInputStream("TrackSaveState.ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            MusicGenerator savedState = (MusicGenerator) objectInputStream.readObject();
+            savedState.makeGUI();
+
+
+
+        }catch(Exception e){
+
+        }
     }
     public void makeTrack(int[] list){
 
