@@ -178,6 +178,7 @@ public class MusicGenerator implements Serializable {
         }catch(Exception e){
 
             e.printStackTrace();
+
         }
     }
     public void makeTrack(int[] list){
