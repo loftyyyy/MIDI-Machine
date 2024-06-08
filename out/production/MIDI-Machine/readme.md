@@ -49,8 +49,6 @@ This Java application provides a simple and intuitive interface for creating rhy
 
 This project assumes you have a MIDI synthesizer or software soundfont to render the generated MIDI data into audible drum sounds.
 
-## What I have learned
-I have learned how to hard code GUI, learned streams such as the intermediate and terminal operations and chaining them. I also learned the art of serialization, saving data and loading them (deserialization).
 ## Potential Improvements
 
 * **More Instruments:** Expand the instrument selection.
@@ -60,10 +58,3 @@ I have learned how to hard code GUI, learned streams such as the intermediate an
 * **Sound Customization:** Allow users to load their own soundfonts.
 
 Feel free to explore and modify the code to create your own unique MIDI music compositions!
-
-
-[![Music Generator Demo]](https://github.com/loftyyyy/MIDI-Machine/assets/78846865/bafeb49f-80de-479f-9c1b-601e8780413f)
-
-
-
-
