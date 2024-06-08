@@ -58,3 +58,10 @@ This project assumes you have a MIDI synthesizer or software soundfont to render
 * **Sound Customization:** Allow users to load their own soundfonts.
 
 Feel free to explore and modify the code to create your own unique MIDI music compositions!
+
+
+[![Music Generator Demo]](https://github.com/loftyyyy/MIDI-Machine/assets/78846865/bafeb49f-80de-479f-9c1b-601e8780413f)
+
+
+
+
