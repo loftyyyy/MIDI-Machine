@@ -9,10 +9,10 @@ import static javax.sound.midi.ShortMessage.*;
 
 public class MusicGenerator implements Serializable {
     private JFrame window = new JFrame("Music Generator");
-    private Sequencer sequencer;
-    private Track track;
-    private Sequence sequence;
-    private ArrayList<JCheckBox> checkBoxes;
+    private transient Sequencer sequencer;
+    private transient Track track;
+    private transient Sequence sequence;
+    private transient ArrayList<JCheckBox> checkBoxes;
 
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat" ,"Acoustic Snare", "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom", "High Agogo", "Open Hi Conga"};
     int[] instruments = {35,42,46,38,49,39,50,60,70, 72,64,56,58,47,67,63};
@@ -139,10 +139,11 @@ public class MusicGenerator implements Serializable {
     public void saveTrack(){
 
         try{
-            MusicGenerator musicGenerator = new MusicGenerator();
             FileOutputStream file = new FileOutputStream("TrackSaveState.ser");
             ObjectOutputStream os = new ObjectOutputStream(file);
-            os.writeObject(musicGenerator);
+            os.writeObject(this);
+            //TODO: How tf does this work? (stream)
+            os.writeObject(checkBoxes.stream().map(JCheckBox::isSelected).toArray(Boolean[]::new)); // Save the checkbox states separately
             os.close();
 
             System.out.print("Saved Successfully");
@@ -158,19 +159,19 @@ public class MusicGenerator implements Serializable {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
             MusicGenerator generator = (MusicGenerator) objectInputStream.readObject();
+            Boolean[] savedCheckboxes = (Boolean[]) objectInputStream.readObject(); // Load the checkbox states
 
-            ArrayList<JCheckBox> savedCheckboxes = (ArrayList<JCheckBox>) objectInputStream.readObject();
 
-            for(int i = 0; i < checkBoxes.size(); i++){
-                checkBoxes.get(i).setSelected(savedCheckboxes.get(i).isSelected());
+
+
+            for (int i = 0; i < checkBoxes.size(); i++) {
+                checkBoxes.get(i).setSelected(savedCheckboxes[i]);
             }
 
 
-
             objectInputStream.close();
-            window.repaint();
-            window.revalidate();
-            System.out.println("Hello world");
+//            window.repaint();
+//            window.revalidate();
 
 
 
@@ -231,6 +232,5 @@ public class MusicGenerator implements Serializable {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 }
