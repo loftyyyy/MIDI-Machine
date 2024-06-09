@@ -2,7 +2,6 @@ import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static javax.sound.midi.ShortMessage.*;
@@ -16,7 +15,8 @@ public class MusicGenerator implements Serializable {
 
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat" ,"Acoustic Snare", "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom", "High Agogo", "Open Hi Conga"};
     int[] instruments = {35,42,46,38,49,39,50,60,70, 72,64,56,58,47,67,63};
-    public static void main(String[] args){
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         MusicGenerator musicGenerator = new MusicGenerator();
         musicGenerator.makeGUI();
         System.out.println("Successfully Called Main Method");
@@ -139,14 +139,25 @@ public class MusicGenerator implements Serializable {
     public void saveTrack(){
 
         try{
-            FileOutputStream file = new FileOutputStream("TrackSaveState.ser");
-            ObjectOutputStream os = new ObjectOutputStream(file);
-            os.writeObject(this);
-            //TODO: How tf does this work? (stream)
-            os.writeObject(checkBoxes.stream().map(JCheckBox::isSelected).toArray(Boolean[]::new)); // Save the checkbox states separately
-            os.close();
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.setDialogTitle("Specify a file to save");
 
-            System.out.print("Saved Successfully");
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+            int userSelection = jFileChooser.showSaveDialog(null);
+
+            if(userSelection == JFileChooser.APPROVE_OPTION){
+                File fileToSave = jFileChooser.getSelectedFile();
+                FileOutputStream file = new FileOutputStream(fileToSave);
+                ObjectOutputStream os = new ObjectOutputStream(file);
+                os.writeObject(this);
+                //TODO: How tf does this work? (stream)
+                os.writeObject(checkBoxes.stream().map(JCheckBox::isSelected).toArray(Boolean[]::new)); // Save the checkbox states separately
+                os.close();
+                System.out.println("hello" + fileToSave);
+            }
+//
+//            System.out.print("Saved Successfully");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -155,21 +166,29 @@ public class MusicGenerator implements Serializable {
     public void loadTrack(){
 
         try{
-            FileInputStream fileInputStream = new FileInputStream("TrackSaveState.ser");
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.setDialogTitle("Specify a file to load");
 
-            MusicGenerator generator = (MusicGenerator) objectInputStream.readObject();
-            Boolean[] savedCheckboxes = (Boolean[]) objectInputStream.readObject(); // Load the checkbox states
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+            int userSelection = jFileChooser.showSaveDialog(null);
+
+            if(userSelection == JFileChooser.APPROVE_OPTION){
+                File fileToSave = jFileChooser.getSelectedFile();
+                FileInputStream fileInputStream = new FileInputStream(fileToSave);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+                MusicGenerator generator = (MusicGenerator) objectInputStream.readObject();
+                Boolean[] savedCheckboxes = (Boolean[]) objectInputStream.readObject(); // Load the checkbox states
 
 
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    checkBoxes.get(i).setSelected(savedCheckboxes[i]);
+                }
 
-
-            for (int i = 0; i < checkBoxes.size(); i++) {
-                checkBoxes.get(i).setSelected(savedCheckboxes[i]);
+                objectInputStream.close();
+                System.out.println("hello" + fileToSave);
             }
-
-
-            objectInputStream.close();
 //            window.repaint();
 //            window.revalidate();
 
