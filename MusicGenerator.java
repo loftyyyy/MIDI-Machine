@@ -12,6 +12,7 @@ public class MusicGenerator implements Serializable {
     private transient Track track;
     private transient Sequence sequence;
     private transient ArrayList<JCheckBox> checkBoxes;
+    private float tempo;
 
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat" ,"Acoustic Snare", "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom", "High Agogo", "Open Hi Conga"};
     int[] instruments = {35,42,46,38,49,39,50,60,70, 72,64,56,58,47,67,63};
@@ -94,9 +95,15 @@ public class MusicGenerator implements Serializable {
     }
     public void changeTempo(float multiplier){
         float tempoFactor = sequencer.getTempoFactor() * multiplier;
+        tempo = tempoFactor;
 
         sequencer.setTempoFactor(tempoFactor);
+        System.out.println(tempo);
 
+    }
+    public void setTempo(float multiplier){
+        sequencer.setTempoFactor(multiplier);
+        System.out.println(multiplier);
     }
 
     public void buildAndStartTrack(){
@@ -153,6 +160,7 @@ public class MusicGenerator implements Serializable {
                 os.writeObject(this);
                 //TODO: How tf does this work? (stream)
                 os.writeObject(checkBoxes.stream().map(JCheckBox::isSelected).toArray(Boolean[]::new)); // Save the checkbox states separately
+                os.writeFloat(tempo);
                 os.close();
                 System.out.println("hello" + fileToSave);
             }
@@ -169,7 +177,7 @@ public class MusicGenerator implements Serializable {
             JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setDialogTitle("Specify a file to load");
 
-            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
             int userSelection = jFileChooser.showSaveDialog(null);
 
@@ -180,11 +188,14 @@ public class MusicGenerator implements Serializable {
 
                 MusicGenerator generator = (MusicGenerator) objectInputStream.readObject();
                 Boolean[] savedCheckboxes = (Boolean[]) objectInputStream.readObject(); // Load the checkbox states
+                Float tempo = (Float) objectInputStream.readFloat();
 
 
                 for (int i = 0; i < checkBoxes.size(); i++) {
                     checkBoxes.get(i).setSelected(savedCheckboxes[i]);
                 }
+
+                setTempo(tempo);
 
                 objectInputStream.close();
                 System.out.println("hello" + fileToSave);
