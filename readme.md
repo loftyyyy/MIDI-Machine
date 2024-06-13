@@ -51,7 +51,7 @@ This project assumes you have a MIDI synthesizer or software soundfont to render
 The other files are just my testing playground about the project, the main and important class is the MusicGenerator.java
 
 ## What I have learned
-I have learned how to hard code GUI, learned streams such as the intermediate and terminal operations and chaining them. I also learned the art of serialization, saving data and loading them (deserialization).
+I have learned how to hard code GUI, introduced to streams such as the intermediate and terminal operations and chaining them. I also learned the art of serialization, saving data and loading them (deserialization).
 ## Potential Improvements
 
 * **More Instruments:** Expand the instrument selection.
