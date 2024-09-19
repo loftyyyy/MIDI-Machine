@@ -51,8 +51,8 @@ public class MusicGenerator implements Serializable {
         tempoUp.addActionListener(event -> changeTempo(1.09f));
         tempoDown.addActionListener(event -> changeTempo(0.97f));
         clearTrack.addActionListener(event -> clearTrack());
-//        saveTrack.addActionListener(event -> saveTrack());
-//        loadTrack.addActionListener(event -> loadTrack());
+        saveTrack.addActionListener(event -> saveTrack());
+        loadTrack.addActionListener(event -> loadTrack());
 
         Box instrumentLabel = new Box(BoxLayout.Y_AXIS);
         for (String instrumentName : instrumentNames) {
@@ -175,4 +175,46 @@ public class MusicGenerator implements Serializable {
             e.printStackTrace();
         }
     }
+
+    public void loadTrack() {
+        try {
+            FileInputStream fileIn = new FileInputStream("track.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+
+            // Read the states from the file
+            boolean[] trackStates = (boolean[]) in.readObject();
+            in.close();
+            fileIn.close();
+
+            // Set the checkbox states
+            for (int i = 0; i < checkBoxes.size(); i++) {
+                checkBoxes.get(i).setSelected(trackStates[i]);
+            }
+            System.out.println("Track loaded successfully.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveTrack() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("track.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            // Convert checkbox states to an array
+            boolean[] trackStates = new boolean[checkBoxes.size()];
+            for (int i = 0; i < checkBoxes.size(); i++) {
+                trackStates[i] = checkBoxes.get(i).isSelected();
+            }
+
+            // Write the states to the file
+            out.writeObject(trackStates);
+            out.close();
+            fileOut.close();
+            System.out.println("Track saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
